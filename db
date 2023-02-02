@@ -1,0 +1,36 @@
+-- Adminer 4.8.1 MySQL 8.0.32 dump
+
+SET NAMES utf8;
+SET time_zone = '+00:00';
+SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+
+SET NAMES utf8mb4;
+
+DROP TABLE IF EXISTS `items`;
+CREATE TABLE `items` (
+  `uuid` int NOT NULL AUTO_INCREMENT,
+  `codice` int NOT NULL,
+  `descrizione` text,
+  `prezzo_acquisto` float unsigned zerofill NOT NULL,
+  `prezzo_vendita` float unsigned zerofill NOT NULL,
+  `quantita` int(10) unsigned zerofill NOT NULL,
+  `categoria` text,
+  PRIMARY KEY (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `items` (`uuid`, `codice`, `descrizione`, `prezzo_acquisto`, `prezzo_vendita`, `quantita`, `categoria`) VALUES
+(1,	1,	'Schermo di protezione 10 pollici',	0000000010.3,	0000000012.3,	0000000010,	'Schermo');
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` char(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `password` char(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `users` (`id`, `username`, `password`) VALUES
+(1,	'admin',	'903537f52b53215aae82d79dc50694a130fa231d');
+
+-- 2023-02-01 19:36:11

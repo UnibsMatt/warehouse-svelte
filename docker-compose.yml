@@ -1,0 +1,31 @@
+version: "3.3"
+services:
+  web:
+    build: 
+      context: frontend
+      dockerfile: Dockerfile
+    image: warehouse:latest
+    container_name: web-ware
+    networks:
+      - warenet
+    ports:
+      - "3000:3000"
+  db:
+    container_name: db-ware
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    volumes:
+      - db-volumes:/var/lib/mysql
+  adminer:
+    image: adminer
+    container_name: adminer
+    ports:
+      - "8080:8080"
+    
+networks:
+  warenet:
+
+volumes:
+  db-volumes:
