@@ -8,7 +8,9 @@ FROM node:19.5.0-alpine3.17
 
 WORKDIR /app
 
-COPY package.json .
+COPY package.json package-lock.json ./
+
+RUN npm install
 
 COPY --from=builder build .
 

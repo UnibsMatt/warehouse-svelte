@@ -1,8 +1,7 @@
 import {getItems} from "$lib/server/database";
 
-export function load({ params }) {
+export async function load({ params }) {
   return {
-    items: getItems()
-    
-  };
+    items: await getItems()    
+  } 
 }

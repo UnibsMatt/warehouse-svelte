@@ -1,73 +1,69 @@
 <script>
-    export let data;
-    console.log(data);
-    import {
-        Navbar,
-        NavLi,
-        NavUl,
-        NavHamburger,
-        TableBody,
-        TableBodyCell,
-        TableBodyRow,
-        TableHead,
-        TableHeadCell,
-        TableSearch,
-        Button,
-    } from "flowbite-svelte";
-    let searchTerm = '';
-    let items = [
-        { id: 1, maker: "Toyota", type: "ABC", make: 2017, count:10},
-        { id: 2, maker: "Ford", type: "CDE", make: 2018 , count:10},
-        { id: 3, maker: "Volvo", type: "FGH", make: 2019 , count:10},
-        { id: 4, maker: "Saab", type: "IJK", make: 2020 , count:10},
-        { id: 2, maker: "Ford", type: "CDE", make: 2018 , count:10},
-        { id: 3, maker: "Volvo", type: "FGH", make: 2019 , count:10},
-        { id: 4, maker: "Saab", type: "IJK", make: 2020 , count:10},
-        { id: 2, maker: "Ford", type: "CDE", make: 2018 , count:10},
-        { id: 3, maker: "Volvo", type: "FGH", make: 2019 , count:10},
-        { id: 4, maker: "Saab", type: "IJK", make: 2020 , count:10},
-    ];
-    $: filteredItems = items.filter(
-    (item) => item.maker.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+  export let data;
+  let { items } = data;
+  import {goto} from "$app/navigation";
+  import {
+    ButtonGroup,
+    Button,
+    Breadcrumb,
+    BreadcrumbItem,
+    TableBody,
+    TableBodyCell,
+    TableBodyRow,
+    TableHead,
+    TableHeadCell,
+    TableSearch,
+  } from "flowbite-svelte";
+
+  let searchTerm = "";
+  $: filteredItems = items.filter(
+    (item) =>
+      item.descrizione.toLowerCase().includes(searchTerm.toLowerCase()) === true
   );
 
-  function pop_item(item){
-    item.count -=1;
-    console.log(filteredItems.at(filteredItems.indexOf(item)));
-    filteredItems = filteredItems;
-  }
-
+  
 </script>
 
-<div class="w-full">
-    <Navbar let:hidden let:toggle>
-        <NavHamburger on:click={toggle} />
-        <NavUl {hidden}>
-            <NavLi href="/home" active={true}>Home</NavLi>
-            <NavLi href="/item">Aggiungi</NavLi>
-            <NavLi href="/logout">Logout</NavLi>
-        </NavUl>
-    </Navbar>
+<div class="w-full items-center block m-10">
+  <div class="mb-10">
+    <Breadcrumb aria-label="Default breadcrumb example">
+      <BreadcrumbItem href="/" home>Logout</BreadcrumbItem>
+      <BreadcrumbItem href="/home">Home</BreadcrumbItem>
+    </Breadcrumb>
+  </div>
+  <div class="mb-10">
+    <ButtonGroup>
+      <Button on:click={() => goto("/item")}>Aggiungi elemento</Button>
+      <Button on:click={() => goto("/sales")}>Report vendite</Button>
 
-    <TableSearch placeholder="Search by maker name" hoverable={true} bind:inputValue={searchTerm}>
-        <TableHead>
-          <TableHeadCell>ID</TableHeadCell>
-          <TableHeadCell>Maker</TableHeadCell>
-          <TableHeadCell>Type</TableHeadCell>
-          <TableHeadCell>Make</TableHeadCell>
-          <TableHeadCell>Quantità</TableHeadCell>
-        </TableHead>
-        <TableBody class="divide-y">
-          {#each filteredItems as item}
-            <TableBodyRow>
-              <TableBodyCell>{item.id}</TableBodyCell>
-              <TableBodyCell>{item.maker}</TableBodyCell>
-              <TableBodyCell>{item.type}</TableBodyCell>
-              <TableBodyCell>{item.make}</TableBodyCell>
-              <TableBodyCell>{item.count}</TableBodyCell>
-              <Button on:click={pop_item(item)}>Remove</Button>
-            </TableBodyRow>
-          {/each}
-        </TableBody>
-      </TableSearch>
+    </ButtonGroup>
+  </div>
+  <TableSearch
+    placeholder="Ricerca per descrizione"
+    hoverable={true}
+    bind:inputValue={searchTerm}
+  >
+    <TableHead>
+      <TableHeadCell>UUID</TableHeadCell>
+      <TableHeadCell>Codice</TableHeadCell>
+      <TableHeadCell>Categoria</TableHeadCell>
+      <TableHeadCell>Descrizione</TableHeadCell>
+      <TableHeadCell>Aquistato</TableHeadCell>
+      <TableHeadCell>Venduto</TableHeadCell>
+      <TableHeadCell>In stock</TableHeadCell>
+    </TableHead>
+    <TableBody>
+      {#each filteredItems as item}
+        <TableBodyRow>
+          <TableBodyCell>{item.uuid}</TableBodyCell>
+          <TableBodyCell>{item.codice}</TableBodyCell>
+          <TableBodyCell>{item.categoria}</TableBodyCell>
+          <TableBodyCell>{item.descrizione}</TableBodyCell>
+          <TableBodyCell>{item.prezzo_acquisto} €</TableBodyCell>
+          <TableBodyCell>{item.prezzo_vendita} €</TableBodyCell>
+          <TableBodyCell>{item.quantita}</TableBodyCell>
+        </TableBodyRow>
+      {/each}
+    </TableBody>
+  </TableSearch>
 </div>

@@ -1,18 +1,18 @@
 import mysql from "mysql2/promise";
 
-export function getItems() {
-  const con = mysql.createConnection({
+export async function getItems() {
+  const con = await mysql.createConnection({
     host: "db-ware",
-    user: "ware-admin",
-    password: "Lol92lol92;",
+    user: "root",
+    password: "example",
     database: "warehouse"
   });
-  connection.query(
-    'SELECT * FROM `itmes`',
-    function (err, results, fields) {
-      console.log(results); // results contains rows returned by server
-      console.log(fields); // fields contains extra meta data about results, if available
+  
+  let res = await con.query("SELECT * FROM `items`").then(
+    function([rows, field]){
+      return rows;
     }
   );
-
+  
+  return res;
 }
