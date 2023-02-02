@@ -13,6 +13,5 @@ export async function getItems() {
       return rows;
     }
   );
-  
   return res;
 }
