@@ -1,5 +1,6 @@
 <script>
     export let data;
+    export let form;
     console.log(data);
     import {
         Label,
@@ -17,12 +18,19 @@
         { value: "audio", name: "Audio" },
         { value: "accessori", name: "Accessori" },
     ];
+    import { onMount } from "svelte";
+    var formE;
+    onMount(() => {
+        formE = document.getElementById("dataForm");
+    });
 
+    function check_and_sumbit(event) {
+        formE.submit();
+    }
 </script>
 
 <div class="w-full items-center block m-10">
-    <form method="POST">
-        
+    <form method="POST" id="dataForm">
         <div class="mb-10">
             <Breadcrumb aria-label="Default breadcrumb example">
                 <BreadcrumbItem href="/home" home>Home</BreadcrumbItem>
@@ -40,38 +48,94 @@
                     bind:value={categoriaSelezionata}
                     placeholder="Selezionare categoria"
                 />
+                {#if form?.invalidCat}
+                    <div
+                        class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                        role="alert"
+                    >
+                        <span class="font-medium">Selezionare una categoria</span>
+                    </div>
+                {/if}
             </div>
             <div class="mb-6">
                 <Label for="codice" class="block mb-2">Codice prodotto</Label>
-                <Input id="codice" name="codice" placeholder="Codice prodotto" />
+                <Input
+                    id="codice"
+                    name="codice"
+                    placeholder="Codice prodotto"
+                />
+                {#if form?.invalidCode}
+                    <div
+                        class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                        role="alert"
+                    >
+                        <span class="font-medium">Codice mancante</span>
+                    </div>
+                {/if}
             </div>
             <div class="mb-6">
                 <Label for="descrizione" class="block mb-2"
                     >Descrizione prodotto</Label
                 >
-                <Textarea id="descrizione" name="descrizione" placeholder="Descrizione prodotto" />
+                <Textarea
+                    id="descrizione"
+                    name="descrizione"
+                    placeholder="Descrizione prodotto"
+                />
             </div>
             <div class=" grid grid-cols-3">
                 <div class="m-2">
                     <Label for="prezzo_vendita" class="block mb-2"
                         >Prezzo di vendita</Label
                     >
-                    <Input id="prezzo_vendita" name=prezzo_vendita placeholder="€" />
+                    <Input
+                        id="prezzo_vendita"
+                        name="prezzo_vendita"
+                        placeholder="€"
+                    />
+                    {#if form?.invalidSell}
+                    <div
+                        class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                        role="alert"
+                    >
+                        <span class="font-medium">Prezzo di vendita mancante</span>
+                    </div>
+                {/if}
                 </div>
                 <div class="m-2">
-                    <Label for="prezzo_acquisto"  class="block mb-2"
+                    <Label for="prezzo_acquisto" class="block mb-2"
                         >Prezzo d'acquisto</Label
                     >
-                    <Input id="prezzo_acquisto" name="prezzo_acquisto" placeholder="€" />
+                    <Input
+                        id="prezzo_acquisto"
+                        name="prezzo_acquisto"
+                        placeholder="€"
+                    />
+                    {#if form?.invalidBuy}
+                    <div
+                        class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                        role="alert"
+                    >
+                        <span class="font-medium">Prezzo d'acquisto mancante</span>
+                    </div>
+                    {/if}
                 </div>
                 <div class="m-2">
-                    <Label for="quantità"  class="block mb-2"
+                    <Label for="quantità" class="block mb-2"
                         >Quantita disponibile</Label
                     >
-                    <Input id="quantità" name="quantità" placeholder="Pz." />
+                    <Input id="quantita" name="quantita" placeholder="Pz." />
+                    {#if form?.invalidQuantity}
+                    <div
+                        class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                        role="alert"
+                    >
+                        <span class="font-medium">Inserire un numero maggiore di 0</span>
+                    </div>
+                    {/if}
                 </div>
             </div>
-            <Button on:click={() => (defaultModal = true) }>Aggiungi</Button>
+            <Button on:click={() => (defaultModal = true)}>Aggiungi</Button>
             <Modal
                 title="Aggiungere il prodotto al database?"
                 bind:open={defaultModal}
@@ -83,12 +147,9 @@
                     Il prodotto verrà aggiunto al database
                 </p>
                 <svelte:fragment slot="footer">
-                    <Button
-                        >Aggiungi</Button
-                    >
+                    <Button on:click={check_and_sumbit}>Aggiungi</Button>
                     <Button color="alternative">Cancella</Button>
                 </svelte:fragment>
-                
             </Modal>
         </div>
     </form>

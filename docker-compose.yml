@@ -6,6 +6,12 @@ services:
       dockerfile: Dockerfile
     image: warehouse:latest
     container_name: web-ware
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - ORIGIN=https://cb0a-93-45-80-172.ngrok.io
     networks:
       - warenet
       - db-net
@@ -16,11 +22,13 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - db-volumes:/var/lib/mysql
     networks:
       - db-net
+    ports:
+      - "3306:3306"
 
   adminer:
     image: adminer
