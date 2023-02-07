@@ -1,6 +1,6 @@
 import mysql from "mysql2/promise";
 
-
+/** 
 async function getConnection() {
   const con = await mysql.createConnection({
     host: process.env.DB_HOST,
@@ -9,8 +9,8 @@ async function getConnection() {
     database: process.env.DB_NAME
   });
   return con;
-} 
-/** 
+} */
+
 async function getConnection() {
   const con = await mysql.createConnection({
     host: "localhost",
@@ -20,7 +20,7 @@ async function getConnection() {
   });
   return con;
 }
-*/
+
 
 
 export async function getItems() {

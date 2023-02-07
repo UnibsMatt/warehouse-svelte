@@ -11,7 +11,7 @@ services:
       - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
-      - ORIGIN=https://cb0a-93-45-80-172.ngrok.io
+      - ORIGIN=http://localhost
     networks:
       - warenet
       - db-net
@@ -25,6 +25,9 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - db-volumes:/var/lib/mysql
+      #- ./bk:/bk
+      #- ./root:/var/spool/cron/crontabs/root
+      #- ./backup.sh:/root/backup.sh
     networks:
       - db-net
     ports:

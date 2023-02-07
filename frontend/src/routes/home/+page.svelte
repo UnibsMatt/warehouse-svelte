@@ -22,37 +22,55 @@
       item.descrizione.toLowerCase().includes(searchTerm.toLowerCase()) === true
   );
 
-  function radioCheck(event){
-    let sorted = filteredItems;    
-    console.log(event.currentTarget.value)
-    switch (event.currentTarget.value)
-    {
-
+  function radioCheck(event) {
+    let sorted = filteredItems;
+    console.log(event.currentTarget.value);
+    switch (event.currentTarget.value) {
       case "uuid":
-      sorted = filteredItems.sort((p1, p2) => (p1.uuid > p2.uuid) ? 1 : (p1.uuid < p2.uuid) ? -1 : 0);
-    
+        sorted = filteredItems.sort((p1, p2) =>
+          p1.uuid > p2.uuid ? 1 : p1.uuid < p2.uuid ? -1 : 0
+        );
+
         break;
-        
-      case "buy": 
-      sorted = filteredItems.sort((p1, p2) => (p1.prezzo_acquisto < p2.prezzo_acquisto) ? 1 : (p1.prezzo_acquisto > p2.prezzo_acquisto) ? -1 : 0);
-    
+
+      case "buy":
+        sorted = filteredItems.sort((p1, p2) =>
+          p1.prezzo_acquisto < p2.prezzo_acquisto
+            ? 1
+            : p1.prezzo_acquisto > p2.prezzo_acquisto
+            ? -1
+            : 0
+        );
+
         break;
-        
+
       case "sell":
-      sorted = filteredItems.sort((p1, p2) => (p1.prezzo_vendita < p2.prezzo_vendita) ? 1 : (p1.prezzo_vendita > p2.prezzo_vendita) ? -1 : 0);
-    
+        sorted = filteredItems.sort((p1, p2) =>
+          p1.prezzo_vendita < p2.prezzo_vendita
+            ? 1
+            : p1.prezzo_vendita > p2.prezzo_vendita
+            ? -1
+            : 0
+        );
+
         break;
-        
-      default: break;
-        
+
+      default:
+        break;
     }
-    
+
     filteredItems = sorted;
+  }
 
-    }
-  
-    
-
+  async function sell_item(item_id) {
+    const res = await fetch(`/item/${item_id}/sell`, {
+      method: "POST",
+      body: JSON.stringify({
+        "item": item_id,
+      }),
+    });
+    console.log(await res.json())
+  }
 </script>
 
 <div class="w-full items-center block m-10">
@@ -69,9 +87,15 @@
     </ButtonGroup>
   </div>
 
-  <Radio class="m-5" inline name="example" value="uuid" on:change={radioCheck}>UUID</Radio>
-  <Radio class="m-5" inline name="example" value="buy" on:change={radioCheck}>Acquisto</Radio>
-  <Radio class="m-5" inline name="example" value="sell" on:change={radioCheck}>Vendita</Radio>
+  <Radio class="m-5" inline name="example" value="uuid" on:change={radioCheck}
+    >UUID</Radio
+  >
+  <Radio class="m-5" inline name="example" value="buy" on:change={radioCheck}
+    >Acquisto</Radio
+  >
+  <Radio class="m-5" inline name="example" value="sell" on:change={radioCheck}
+    >Vendita</Radio
+  >
 
   <TableSearch
     placeholder="Ricerca per descrizione"
@@ -87,6 +111,7 @@
       <TableHeadCell>In stock</TableHeadCell>
       <TableHeadCell>Action</TableHeadCell>
     </TableHead>
+
     <TableBody>
       {#each filteredItems as item}
         <TableBodyRow>
@@ -97,11 +122,11 @@
           <TableBodyCell>{item.prezzo_vendita} €</TableBodyCell>
           <TableBodyCell>{item.quantita}</TableBodyCell>
           <TableBodyCell>
-          <Button>Sell one</Button>
+            <Button on:click={() => sell_item(item.uuid)}
+              >Sell one</Button
+            >
           </TableBodyCell>
-
         </TableBodyRow>
-        
       {/each}
     </TableBody>
   </TableSearch>
