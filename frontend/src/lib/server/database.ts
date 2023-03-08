@@ -1,5 +1,11 @@
 import mysql from "mysql2/promise";
 
+interface ReqUpdate{
+  item: number,
+  price: number
+
+}
+
 /** 
 async function getConnection() {
   const con = await mysql.createConnection({
@@ -41,15 +47,21 @@ export async function addItem(formData: FormData) {
   const codice = formData.get("codice");
   const categoria = formData.get("categoria");
   const descrizione = formData.get("descrizione");
-  const prezzo_vendita = formData.get("prezzo_vendita");
   const prezzo_acquisto = formData.get("prezzo_acquisto");
   const quantita = formData.get("quantita");
-  await con.query("INSERT INTO items VALUES (?,?,?,?,?,?,?)", [null, codice, descrizione, prezzo_acquisto, prezzo_vendita, quantita, categoria]);
+  await con.query("INSERT INTO items VALUES (?,?,?,?,?,?,?)", [null, codice, descrizione, prezzo_acquisto, 0, quantita, categoria]);
 }
 
-export async function sellItem(formData: FormData) {
+export async function sellItem(info: ReqUpdate) {
   
   const con = await getConnection();
-  //TODO 
+
+  let item_left = await con.query(`SELECT quantita, prezzo_vendita FROM items where uuid=${info.item}`);
+  let remaining = item_left[0][0]["quantita"];
+  let vendite = item_left[0][0]["prezzo_vendita"];
+
+  if (remaining > 0){
+    await con.query(`UPDATE items SET quantita = ${remaining - 1}, prezzo_vendita = ${vendite + info.price} WHERE uuid = ${info.item}`);
+  }
 }
 

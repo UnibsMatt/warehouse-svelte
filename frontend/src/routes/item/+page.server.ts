@@ -1,6 +1,5 @@
 import { fail, redirect } from "@sveltejs/kit";
 import {addItem} from "$lib/server/database";
-import { goto } from "$app/navigation";
 
 /** @type {import('./$types').Actions} */
 export const actions = {
@@ -10,7 +9,6 @@ export const actions = {
     const codice = values.get("codice");
     const categoria = values.get("categoria");
     const descrizione = values.get("descrizione");
-    const prezzo_vendita = values.get("prezzo_vendita");
     const prezzo_acquisto = values.get("prezzo_acquisto");
     const quantita = values.get("quantita");
 
@@ -19,16 +17,11 @@ export const actions = {
       return fail(400, {invalidCat: true});
     }
     
-    
     if (!codice || Number.isNaN(Number.parseInt(codice.toString()))) {
       
       return fail(400, {invalidCode: true});
     }
     
-    if (!prezzo_vendita || Number.isNaN(Number.parseInt(prezzo_vendita.toString())) ||Number.parseInt(prezzo_vendita.toString()) <= 0){
-      
-      return fail(400, {invalidSell: true});
-    }
     if (!prezzo_acquisto || Number.isNaN(Number.parseInt(prezzo_acquisto.toString())) || Number.parseInt(prezzo_acquisto.toString()) <= 0){
       
       return fail(400, {invalidBuy: true});

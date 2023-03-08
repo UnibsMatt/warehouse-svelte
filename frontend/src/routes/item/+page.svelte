@@ -83,25 +83,8 @@
                     placeholder="Descrizione prodotto"
                 />
             </div>
-            <div class=" grid grid-cols-3">
-                <div class="m-2">
-                    <Label for="prezzo_vendita" class="block mb-2"
-                        >Prezzo di vendita</Label
-                    >
-                    <Input
-                        id="prezzo_vendita"
-                        name="prezzo_vendita"
-                        placeholder="€"
-                    />
-                    {#if form?.invalidSell}
-                    <div
-                        class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
-                        role="alert"
-                    >
-                        <span class="font-medium">Prezzo di vendita mancante</span>
-                    </div>
-                {/if}
-                </div>
+            <div class=" grid grid-cols-2">
+                
                 <div class="m-2">
                     <Label for="prezzo_acquisto" class="block mb-2"
                         >Prezzo d'acquisto</Label

@@ -24,10 +24,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
-      - db-volumes:/var/lib/mysql
-      #- ./bk:/bk
-      #- ./root:/var/spool/cron/crontabs/root
-      #- ./backup.sh:/root/backup.sh
+      - ./bk/data:/var/lib/mysql
+      - ./bk:/docker-entrypoint-initdb.d/
     networks:
       - db-net
     ports:

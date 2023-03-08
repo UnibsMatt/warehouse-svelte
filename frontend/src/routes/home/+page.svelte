@@ -1,7 +1,7 @@
 <script>
   export let data;
   let { items } = data;
-  import { goto } from "$app/navigation";
+  import { goto , invalidateAll} from "$app/navigation";
   import {
     ButtonGroup,
     Button,
@@ -12,11 +12,18 @@
     TableBodyRow,
     TableHead,
     TableHeadCell,
+    Modal,
     Radio,
+    Input,
+    Label,
     TableSearch,
   } from "flowbite-svelte";
 
+  let defaultModal = false;
   let searchTerm = "";
+  let sell_value = 1;
+  let selectedItem = Object();
+
   $: filteredItems = items.filter(
     (item) =>
       item.descrizione.toLowerCase().includes(searchTerm.toLowerCase()) === true
@@ -59,17 +66,19 @@
         break;
     }
 
-    filteredItems = sorted;
+    items = items;
   }
 
-  async function sell_item(item_id) {
+  async function sell_item(item_id, price) {
     const res = await fetch(`/item/${item_id}/sell`, {
       method: "POST",
       body: JSON.stringify({
-        "item": item_id,
+        item: item_id,
+        price: price,
       }),
     });
-    console.log(await res.json())
+    invalidateAll();
+    filteredItems = filteredItems
   }
 </script>
 
@@ -96,7 +105,6 @@
   <Radio class="m-5" inline name="example" value="sell" on:change={radioCheck}
     >Vendita</Radio
   >
-
   <TableSearch
     placeholder="Ricerca per descrizione"
     hoverable={true}
@@ -122,12 +130,44 @@
           <TableBodyCell>{item.prezzo_vendita} €</TableBodyCell>
           <TableBodyCell>{item.quantita}</TableBodyCell>
           <TableBodyCell>
-            <Button on:click={() => sell_item(item.uuid)}
-              >Sell one</Button
-            >
+            <Button 
+            disabled = {item.quantita <= 0}
+            on:click={() => (defaultModal = true, selectedItem = item)}>
+            {#if item.quantita > 0}
+            Vendi
+            {:else}
+            Esaurito
+            {/if}
+          </Button>
+            
           </TableBodyCell>
         </TableBodyRow>
+        <Modal
+              title="Vendita {selectedItem.descrizione}"
+              bind:open={defaultModal}
+              
+              autoclose
+            >
+              <p
+                class="text-base leading-relaxed text-gray-500 dark:text-gray-400"
+              >
+                <Label for="vendita" class="block mb-2"
+                  >Prezzo di vendita ?
+
+                  <Input let:props>
+                    <input type="number" {...props} bind:value={sell_value} />
+                  </Input>
+                </Label>
+              </p>
+              <svelte:fragment slot="footer">
+                <Button on:click={sell_item(selectedItem.uuid, sell_value)}
+                  >Vendi</Button
+                >
+                <Button color="alternative">Cancella</Button>
+              </svelte:fragment>
+            </Modal>
       {/each}
+      
     </TableBody>
   </TableSearch>
 </div>
